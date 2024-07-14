@@ -1,0 +1,28 @@
+services:
+  postgres:
+    container_name: postgres-by-bot
+    image: postgres
+    volumes:
+      - pg-data4:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      PGUSER: "postgres"
+      POSTGRES_PASSWORD: "123123"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  app:
+    container_name: dota-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+
+volumes:
+  pg-data4:
